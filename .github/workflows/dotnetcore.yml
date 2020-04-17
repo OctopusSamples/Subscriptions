@@ -39,6 +39,8 @@ jobs:
         unzip /opt/octo/octopus.zip
         echo "unzipped octopus.zip"
         chmod +x /opt/octo/octo
+        echo "version number"
+        echo $(cat ${{env.working_directory}}/version.txt)
     - name: Pack Application
       working-directory: ${{env.working-directory}} 
       run: >-
