@@ -40,7 +40,7 @@ jobs:
         echo "unzipped octopus.zip"
         chmod +x /opt/octo/octo
         echo "version number"
-        echo $(cat ${{env.working_directory}}/version.txt)
+        echo $(cat ${{ github.workspace }}/version.txt)
     - name: Pack Application
       working-directory: ${{env.working-directory}} 
       run: >-
@@ -48,7 +48,7 @@ jobs:
         --outFolder /home/runner/work/AzFuncNotifySlack
         --basePath /home/runner/work/AzFuncNotifySlack/AzureSlackFunction
         --id AwsSamLambda
-        --version $(cat ${{env.working_directory}}/version.txt)
+        --version $(cat ${{ github.workspace }}/version.txt)
         --format zip
     - name: Push to Octopus
       working-directory: ${{env.working-directory}} 
@@ -56,5 +56,5 @@ jobs:
         /opt/octo/octo push
         --server ${{ secrets.OCTOADMINSAMPLE_URL }}
         --apiKey ${{ secrets.OCTOADMINSAMPLE_APIKEY }}
-        --package ${{env.working-directory}}/AzureSlackFunction.$(cat ${{env.working-directory}}/version.txt).zip
+        --package ${{env.working-directory}}/AzureSlackFunction.$(cat ${{ github.workspace }}/version.txt).zip
         --overwrite-mode IgnoreIfExists
