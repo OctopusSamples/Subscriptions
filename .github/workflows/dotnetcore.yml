@@ -11,7 +11,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-     working_directory: /home/runner/work/Subscriptions/Subscriptions/AzFuncNotifySlack
+     working_directory: ./AzFuncNotifySlack
        
     steps:
     - uses: actions/checkout@v2
@@ -20,8 +20,8 @@ jobs:
       with:
         dotnet-version: 3.1.101
     - name: Install dependencies
+      working-directory: ${{env.working-directory}} 
       run: dotnet restore 
-      working-directory:  ${{env.working-directory}} 
     - uses: actions/checkout@v1
     - name: Get Git Version
       uses: docker://gittools/gitversion:5.0.2-beta1-27-linux-centos-7-netcoreapp2.2
@@ -32,19 +32,20 @@ jobs:
       with:
           tag_name: $(cat ${{env.working-directory}}/version.txt)
     - name: Build
+      working-directory: ${{env.working-directory}} 
       run: dotnet build --configuration Release --no-restore
-      working-directory:  ${{env.working-directory}} 
     #- name: Create the package
     #  run: dotnet pack --configuration Release AzFuncNotifySlack/AzureSlackFunction.csproj
     - name: Extract Octopus Tools
+      working-directory: ${{env.working-directory}} 
       run: |
         mkdir /opt/octo
         cd /opt/octo
         wget -O /opt/octo/octopus.zip https://download.octopusdeploy.com/octopus-tools/7.3.3/OctopusTools.7.3.3.portable.zip
         unzip /opt/octo/octopus.zip
         chmod +x /opt/octo/Octo
-      working-directory:  ${{env.working-directory}} 
     - name: Pack Application
+      working-directory: ${{env.working-directory}} 
       run: >-
         /opt/octo/Octo pack .
         --outFolder /home/runner/work/AzFuncNotifySlack
@@ -52,12 +53,11 @@ jobs:
         --id AwsSamLambda
         --version $(cat /home/runner/work/AzFuncNotifySlack/AzureSlackFunction/version.txt)
         --format zip
-      working-directory:  ${{env.working-directory}} 
     - name: Push to Octopus
+      working-directory: ${{env.working-directory}} 
       run: >-
         /opt/octo/Octo push
         --server ${{ secrets.OCTOADMINSAMPLE_URL }}
         --apiKey ${{ secrets.OCTOADMINSAMPLE_APIKEY }}
         --package /home/runner/work/AzFuncNotifySlack/AzureSlackFunction.$(cat /home/runner/work/AzFuncNotifySlack/AzureSlackFunction/version.txt).zip
         --overwrite-mode IgnoreIfExists
-      working-directory:  ${{env.working-directory}} 
