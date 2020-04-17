@@ -10,7 +10,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    env:
+     working_directory: ./AzFuncNotifySlack
+       
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET Core
@@ -18,7 +20,8 @@ jobs:
       with:
         dotnet-version: 3.1.101
     - name: Install dependencies
-      run: dotnet restore AzFuncNotifySlack/AzureSlackFunction.csproj   
+      run: dotnet restore 
+      working-directory:  ${{env.working-directory}} 
     - uses: actions/checkout@v1
     - name: Get Git Version
       uses: docker://gittools/gitversion:5.0.2-beta1-27-linux-centos-7-netcoreapp2.2
@@ -27,9 +30,10 @@ jobs:
     - name: Create Release
       uses: actions/create-release@v1
       with:
-          tag_name: $(cat /home/runner/work/AzFuncNotifySlack/AzureSlackFunction/version.txt)
+          tag_name: $(cat ${{env.working-directory}}/version.txt)
     - name: Build
-      run: dotnet build AzFuncNotifySlack/AzureSlackFunction.csproj --configuration Release --no-restore
+      run: dotnet build --configuration Release --no-restore
+      working-directory:  ${{env.working-directory}} 
     #- name: Create the package
     #  run: dotnet pack --configuration Release AzFuncNotifySlack/AzureSlackFunction.csproj
     - name: Extract Octopus Tools
@@ -39,6 +43,7 @@ jobs:
         wget -O /opt/octo/octopus.zip https://download.octopusdeploy.com/octopus-tools/7.3.3/OctopusTools.7.3.3.portable.zip
         unzip /opt/octo/octopus.zip
         chmod +x /opt/octo/Octo
+      working-directory:  ${{env.working-directory}} 
     - name: Pack Application
       run: >-
         /opt/octo/Octo pack .
@@ -47,6 +52,7 @@ jobs:
         --id AwsSamLambda
         --version $(cat /home/runner/work/AzFuncNotifySlack/AzureSlackFunction/version.txt)
         --format zip
+      working-directory:  ${{env.working-directory}} 
     - name: Push to Octopus
       run: >-
         /opt/octo/Octo push
@@ -54,3 +60,4 @@ jobs:
         --apiKey ${{ secrets.OCTOADMINSAMPLE_APIKEY }}
         --package /home/runner/work/AzFuncNotifySlack/AzureSlackFunction.$(cat /home/runner/work/AzFuncNotifySlack/AzureSlackFunction/version.txt).zip
         --overwrite-mode IgnoreIfExists
+      working-directory:  ${{env.working-directory}} 
