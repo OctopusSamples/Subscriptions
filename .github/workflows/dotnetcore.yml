@@ -18,15 +18,15 @@ jobs:
       with:
         dotnet-version: 3.1.101
     - name: Install dependencies
-      run: dotnet restore AzFuncNotifySlack/AzureSlackFunction.csproj
+      run: dotnet restore AzFuncNotifySlack/AzureSlackFunction.csproj   
+    - name: Get Git Version
+      uses: docker://gittools/gitversion:5.0.2-beta1-27-linux-centos-7-netcoreapp2.2
+      with:
+        args: /github/workspace /nofetch /exec /bin/sh /execargs "-c \"echo $GitVersion_FullSemVer > /github/workspace/version.txt\""
     - name: Build
       run: dotnet build AzFuncNotifySlack/AzureSlackFunction.csproj --configuration Release --no-restore
     #- name: Create the package
     #  run: dotnet pack --configuration Release AzFuncNotifySlack/AzureSlackFunction.csproj
-    - name: Get Git Version
-      uses: docker://mcasperson/gitversion:5.0.2-linux-centos-7-netcoreapp2.2
-      with:
-        args: /github/workspace /nofetch /exec /bin/sh /execargs "-c \"echo $GitVersion_FullSemVer > /github/workspace/version.txt\""
     - name: Extract Octopus Tools
       run: |
         mkdir /opt/octo
