@@ -42,19 +42,19 @@ jobs:
         echo "version number"
         echo $(cat ${{ github.workspace }}/version.txt)
     - name: Pack Application
-      working-directory: ${{env.working-directory}} 
+      working-directory: ${{env.working_directory}} 
       run: >-
         /opt/octo/octo pack .
-        --outFolder ${{env.working-directory}} 
-        --basePath ${{env.working-directory}} 
+        --outFolder ${{env.working_directory}} 
+        --basePath ${{env.working_directory}} 
         --id AzureSlackFunction
         --version $(cat ${{ github.workspace }}/version.txt)
         --format zip
     - name: Push to Octopus
-      working-directory: ${{env.working-directory}} 
+      working-directory: ${{env.working_directory}} 
       run: >-
         /opt/octo/octo push
         --server ${{ secrets.OCTOADMINSAMPLE_URL }}
         --apiKey ${{ secrets.OCTOADMINSAMPLE_APIKEY }}
-        --package ${{env.working-directory}}AzureSlackFunction.$(cat ${{ github.workspace }}/version.txt).zip
+        --package ${{env.working_directory}}AzureSlackFunction.$(cat ${{ github.workspace }}/version.txt).zip
         --overwrite-mode IgnoreIfExists
