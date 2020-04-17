@@ -23,16 +23,29 @@ jobs:
       run: dotnet build AzFuncNotifySlack/AzureSlackFunction.csproj --configuration Release --no-restore
     #- name: Create the package
     #  run: dotnet pack --configuration Release AzFuncNotifySlack/AzureSlackFunction.csproj
-    - name: Create NuGet Package
-      run: dotnet pack -c Release /p:Version=${{ github.event.release.tag_name }} AzFuncNotifySlack/AzureSlackFunction.csproj
-     # working-directory: ./src
-    #- name: Archive NuGet Package
-    #  uses: actions/upload-artifact@v1
-    #  with:
-    #    name: Code.Library
-    #    path: ./src/Code.Library/bin/Release/Code.Library.${{ github.event.release.tag_name }}.nupkg
-    - name: Archive NuGet Package
-      uses: actions/upload-artifact@v1
+    - name: Get Git Version
+      uses: docker://mcasperson/gitversion:5.0.2-linux-centos-7-netcoreapp2.2
       with:
-        name: AzureSlackFunction
-        path: /home/runner/work/Subscriptions/Subscriptions/AzFuncNotifySlack.${{ github.event.release.tag_name }}.nupkg
+        args: /github/workspace /nofetch /exec /bin/sh /execargs "-c \"echo $GitVersion_FullSemVer > /github/workspace/version.txt\""
+    - name: Extract Octopus Tools
+      run: |
+        mkdir /opt/octo
+        cd /opt/octo
+        wget -O /opt/octo/octopus.zip https://download.octopusdeploy.com/octopus-tools/7.3.3/OctopusTools.7.3.3.portable.zip
+        unzip /opt/octo/octopus.zip
+        chmod +x /opt/octo/Octo
+    - name: Pack Application
+      run: >-
+        /opt/octo/Octo pack .
+        --outFolder /home/runner/work/AzFuncNotifySlack
+        --basePath /home/runner/work/AzFuncNotifySlack/AzureSlackFunction
+        --id AwsSamLambda
+        --version $(cat /home/runner/work/AzFuncNotifySlack/AzureSlackFunction/version.txt)
+        --format zip
+    - name: Push to Octopus
+      run: >-
+        /opt/octo/Octo push
+        --server ${{ secrets.OCTOADMINSAMPLE_URL }}
+        --apiKey ${{ secrets.OCTOADMINSAMPLE_APIKEY }}
+        --package /home/runner/work/AzFuncNotifySlack/AzureSlackFunction.$(cat /home/runner/work/AzFuncNotifySlack/AzureSlackFunction/version.txt).zip
+        --overwrite-mode IgnoreIfExists
