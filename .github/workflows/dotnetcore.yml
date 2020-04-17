@@ -51,7 +51,7 @@ jobs:
     - name: Push to Octopus
       working-directory: ${{env.working-directory}} 
       run: >-
-        /opt/octo/Octo push
+        /opt/octo/octo push
         --server ${{ secrets.OCTOADMINSAMPLE_URL }}
         --apiKey ${{ secrets.OCTOADMINSAMPLE_APIKEY }}
         --package ${{env.working-directory}}/AzureSlackFunction.$(cat ${{env.working-directory}}/version.txt).zip
