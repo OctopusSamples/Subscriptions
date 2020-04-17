@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
      working_directory: ./AzFuncNotifySlack
-     project_directory: ./AzFuncNotifySlack/AzFuncNotifySlack  
+     octo_samples_url: https://samples.octopus.app/  
        
     steps:
     - uses: actions/checkout@v2      
@@ -54,7 +54,8 @@ jobs:
       working-directory: ${{env.working_directory}} 
       run: >-
         /opt/octo/octo push
-        --server ${{ secrets.OCTOADMINSAMPLE_URL }}
+        --space Spaces-142
+        --server ${{ env.octo_samples_url }}
         --apiKey ${{ secrets.OCTOADMINSAMPLE_APIKEY }}
         --package ${{env.working_directory}}/AzureSlackFunction.$(cat ${{ github.workspace }}/version.txt).zip
         --overwrite-mode IgnoreIfExists
