@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
      working_directory: ./AzFuncNotifySlack
+     project_directory: ./AzFuncNotifySlack/AzFuncNotifySlack  
        
     steps:
     - uses: actions/checkout@v2      
@@ -23,7 +24,7 @@ jobs:
       with:
         dotnet-version: 3.1.101
     - name: Install dependencies
-      working-directory: ${{env.working-directory}} 
+      working-directory: ${{env.working_directory}} 
       run: |
         echo "hello1"
         ls
@@ -38,12 +39,12 @@ jobs:
     #  with:
      #     tag_name: $(cat ${{env.working-directory}}/version.txt)
     - name: Build
-      working-directory: ${{env.working-directory}} 
+      working-directory: ${{env.working_directory}} 
       run: dotnet build --configuration Release --no-restore
     #- name: Create the package
     #  run: dotnet pack --configuration Release AzFuncNotifySlack/AzureSlackFunction.csproj
     - name: Extract Octopus Tools
-      working-directory: ${{env.working-directory}} 
+      working-directory: ${{env.working_directory}} 
       run: |
         mkdir /opt/octo
         cd /opt/octo
@@ -65,5 +66,5 @@ jobs:
         /opt/octo/Octo push
         --server ${{ secrets.OCTOADMINSAMPLE_URL }}
         --apiKey ${{ secrets.OCTOADMINSAMPLE_APIKEY }}
-        --package /home/runner/work/AzFuncNotifySlack/AzureSlackFunction.$(cat /home/runner/work/AzFuncNotifySlack/AzureSlackFunction/version.txt).zip
+        --package ${{env.working-directory}}/AzureSlackFunction.$(cat ${{env.working-directory}}/version.txt).zip
         --overwrite-mode IgnoreIfExists
