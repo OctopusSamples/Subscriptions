@@ -18,9 +18,9 @@ jobs:
       with:
         dotnet-version: 3.1.101
     - name: Install dependencies
-      run: dotnet restore
+      run: dotnet restore AzFuncNotifySlack/AzureSlackFunction.csproj
     - name: Build
       run: dotnet build --configuration Release --no-restore
-    - run: dotnet build /AzFuncNotifySlack/AzureSlackFunction.csproj
+    - run: dotnet build AzFuncNotifySlack/AzureSlackFunction.csproj
     - name: Create the package
-      run: dotnet pack --configuration Release /AzFuncNotifySlack/AzureSlackFunction.csproj
+      run: dotnet pack --configuration Release AzFuncNotifySlack/AzureSlackFunction.csproj
