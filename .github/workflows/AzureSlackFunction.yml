@@ -28,7 +28,10 @@ jobs:
       run: dotnet restore 
     - name: Build
       working-directory: ${{env.working_directory}} 
-      run: dotnet build --configuration Release --no-restore
+      run: |
+        dotnet build --configuration Release --no-restore
+        echo "ls of output dir"
+        ls bin/Release/netcoreapp3.1/
     - name: Extract Octopus Tools
       working-directory: ${{env.working_directory}} 
       run: |
@@ -39,14 +42,11 @@ jobs:
         chmod +x /opt/octo/octo
         echo "version number"
         echo $(cat ${{ github.workspace }}/version.txt)
-        echo "ls of output dir"
-        ls 
     - name: Pack Application
       working-directory: ${{env.working_directory}} 
       run: >-
         /opt/octo/octo pack .
-        --outFolder ${{env.working_directory}} 
-        --basePath ${{env.working_directory}}/bin/Release/netcoreapp3.1/
+        --basePath bin/Release/netcoreapp3.1/
         --id AzureSlackFunction
         --version $(cat ${{ github.workspace }}/version.txt)
         --format zip
@@ -57,5 +57,5 @@ jobs:
         --space Spaces-142
         --server ${{ env.octo_samples_url }}
         --apiKey ${{ secrets.OCTOADMINSAMPLE_APIKEY }}
-        --package ${{env.working_directory}}/AzureSlackFunction.$(cat ${{ github.workspace }}/version.txt).zip
+        --package AzureSlackFunction.$(cat ${{ github.workspace }}/version.txt).zip
         --overwrite-mode IgnoreIfExists
