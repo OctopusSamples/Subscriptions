@@ -11,7 +11,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-     working_directory: ./AzFuncNotifySlack
+     working_directory: ./AzFuncNotifySlack/AzFuncNotifySlack
        
     steps:
     - uses: actions/checkout@v2
@@ -23,6 +23,7 @@ jobs:
       working-directory: ${{env.working-directory}} 
       run: |
         ls
+        echo "hello"
         dotnet restore 
     - uses: actions/checkout@v1
     - name: Get Git Version
