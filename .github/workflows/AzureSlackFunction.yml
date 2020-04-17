@@ -40,9 +40,7 @@ jobs:
         echo "version number"
         echo $(cat ${{ github.workspace }}/version.txt)
         echo "ls of output dir"
-        ls ${{env.working_directory}}
-        echo "ls of output dirplus"
-        ls ${{env.working_directory}}/bin/Release/netcoreapp3.1/
+        ls 
     - name: Pack Application
       working-directory: ${{env.working_directory}} 
       run: >-
