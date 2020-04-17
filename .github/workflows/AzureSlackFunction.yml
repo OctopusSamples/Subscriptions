@@ -35,12 +35,14 @@ jobs:
         mkdir /opt/octo
         cd /opt/octo
         wget -O /opt/octo/octopus.zip https://download.octopusdeploy.com/octopus-tools/7.3.3/OctopusTools.7.3.3.portable.zip
-        echo "unzip octopus.zip"
         unzip /opt/octo/octopus.zip
-        echo "unzipped octopus.zip"
         chmod +x /opt/octo/octo
         echo "version number"
         echo $(cat ${{ github.workspace }}/version.txt)
+        echo "ls of output dir"
+        ls ${{env.working_directory}}
+        echo "ls of output dirplus"
+        ls ${{env.working_directory}}/bin/Release/netcoreapp3.1/
     - name: Pack Application
       working-directory: ${{env.working_directory}} 
       run: >-
