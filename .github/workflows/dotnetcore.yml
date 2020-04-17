@@ -25,29 +25,20 @@ jobs:
         dotnet-version: 3.1.101
     - name: Install dependencies
       working-directory: ${{env.working_directory}} 
-      run: |
-        echo "hello1"
-        ls
-        echo "hello2"
-        dotnet restore 
-    #- uses: actions/checkout@v1
-  #- name: Create Release
-   #   uses: actions/create-release@v1
-    #  with:
-     #     tag_name: $(cat ${{env.working-directory}}/version.txt)
+      run: dotnet restore 
     - name: Build
       working-directory: ${{env.working_directory}} 
       run: dotnet build --configuration Release --no-restore
-    #- name: Create the package
-    #  run: dotnet pack --configuration Release AzFuncNotifySlack/AzureSlackFunction.csproj
     - name: Extract Octopus Tools
       working-directory: ${{env.working_directory}} 
       run: |
         mkdir /opt/octo
         cd /opt/octo
         wget -O /opt/octo/octopus.zip https://download.octopusdeploy.com/octopus-tools/7.3.3/OctopusTools.7.3.3.portable.zip
+        echo "unzip octopus.zip"
         unzip /opt/octo/octopus.zip
-        chmod +x /opt/octo/Octo
+        echo "unzipped octopus.zip"
+        chmod +x /opt/octo/octo
     - name: Pack Application
       working-directory: ${{env.working-directory}} 
       run: >-
