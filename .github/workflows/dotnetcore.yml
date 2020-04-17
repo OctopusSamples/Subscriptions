@@ -56,5 +56,5 @@ jobs:
         /opt/octo/octo push
         --server ${{ secrets.OCTOADMINSAMPLE_URL }}
         --apiKey ${{ secrets.OCTOADMINSAMPLE_APIKEY }}
-        --package ${{env.working-directory}}/AzureSlackFunction.$(cat ${{ github.workspace }}/version.txt).zip
+        --package ${{env.working-directory}}AzureSlackFunction.$(cat ${{ github.workspace }}/version.txt).zip
         --overwrite-mode IgnoreIfExists
