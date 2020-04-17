@@ -46,7 +46,7 @@ jobs:
       run: >-
         /opt/octo/octo pack .
         --outFolder ${{env.working_directory}} 
-        --basePath ${{env.working_directory}} 
+        --basePath ${{env.working_directory}}/bin/Release/netcoreapp3.1/
         --id AzureSlackFunction
         --version $(cat ${{ github.workspace }}/version.txt)
         --format zip
