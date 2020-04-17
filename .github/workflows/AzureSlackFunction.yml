@@ -1,4 +1,4 @@
-name: .NET Core
+name: Azure Slack Function
 
 on:
   push:
