@@ -29,9 +29,6 @@ jobs:
         echo "hello1"
         ls
         echo "hello2"
-        cd AzFuncNotifySlack
-        ls
-        echo "hello3"
         dotnet restore 
     #- uses: actions/checkout@v1
   #- name: Create Release
