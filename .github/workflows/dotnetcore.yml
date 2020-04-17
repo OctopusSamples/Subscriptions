@@ -27,7 +27,7 @@ jobs:
     - name: Create Release
       uses: actions/create-release@v1
       with:
-          tag_name: $(cat /home/runner/work/AWSSamExample/AWSSamExample/version.txt)
+          tag_name: $(cat /home/runner/work/AzFuncNotifySlack/AzureSlackFunction/version.txt)
     - name: Build
       run: dotnet build AzFuncNotifySlack/AzureSlackFunction.csproj --configuration Release --no-restore
     #- name: Create the package
@@ -45,12 +45,12 @@ jobs:
         --outFolder /home/runner/work/AzFuncNotifySlack
         --basePath /home/runner/work/AzFuncNotifySlack/AzureSlackFunction
         --id AwsSamLambda
-        --version $(cat /home/runner/work/AWSSamExample/AWSSamExample/version.txt)
+        --version $(cat /home/runner/work/AzFuncNotifySlack/AzureSlackFunction/version.txt)
         --format zip
     - name: Push to Octopus
       run: >-
         /opt/octo/Octo push
         --server ${{ secrets.OCTOADMINSAMPLE_URL }}
         --apiKey ${{ secrets.OCTOADMINSAMPLE_APIKEY }}
-        --package /home/runner/work/AzFuncNotifySlack/AzureSlackFunction.$(cat /home/runner/work/AWSSamExample/AWSSamExample/version.txt).zip
+        --package /home/runner/work/AzFuncNotifySlack/AzureSlackFunction.$(cat /home/runner/work/AzFuncNotifySlack/AzureSlackFunction/version.txt).zip
         --overwrite-mode IgnoreIfExists
