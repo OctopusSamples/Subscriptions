@@ -45,9 +45,9 @@ jobs:
       working-directory: ${{env.working-directory}} 
       run: >-
         /opt/octo/octo pack .
-        --outFolder /home/runner/work/AzFuncNotifySlack
-        --basePath /home/runner/work/AzFuncNotifySlack/AzureSlackFunction
-        --id AwsSamLambda
+        --outFolder ${{env.working-directory}} 
+        --basePath ${{env.working-directory}} 
+        --id AzureSlackFunction
         --version $(cat ${{ github.workspace }}/version.txt)
         --format zip
     - name: Push to Octopus
