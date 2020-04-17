@@ -46,7 +46,7 @@ jobs:
         --outFolder /home/runner/work/AzFuncNotifySlack
         --basePath /home/runner/work/AzFuncNotifySlack/AzureSlackFunction
         --id AwsSamLambda
-        --version $(cat /home/runner/work/AzFuncNotifySlack/AzureSlackFunction/version.txt)
+        --version $(cat ${{env.working_directory}}/version.txt)
         --format zip
     - name: Push to Octopus
       working-directory: ${{env.working-directory}} 
