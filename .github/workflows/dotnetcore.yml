@@ -2,19 +2,20 @@ name: .NET Core
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
-
+    
 jobs:
   build:
 
     runs-on: ubuntu-latest
     env:
-     working_directory: ./AzFuncNotifySlack/AzFuncNotifySlack
+     working_directory: ./AzFuncNotifySlack
        
     steps:
     - uses: actions/checkout@v2
+    - name: Get Git Version
+      uses: docker://gittools/gitversion:5.0.2-beta1-27-linux-centos-7-netcoreapp2.2
+      with:
+        args: /github/workspace /nofetch /exec /bin/sh /execargs "-c \"echo $GitVersion_FullSemVer > /github/workspace/version.txt\""
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
@@ -22,18 +23,18 @@ jobs:
     - name: Install dependencies
       working-directory: ${{env.working-directory}} 
       run: |
+        echo "hello1"
         ls
-        echo "hello"
+        echo "hello2"
+        cd AzFuncNotifySlack
+        ls
+        echo "hello3"
         dotnet restore 
-    - uses: actions/checkout@v1
-    - name: Get Git Version
-      uses: docker://gittools/gitversion:5.0.2-beta1-27-linux-centos-7-netcoreapp2.2
-      with:
-        args: /github/workspace /nofetch /exec /bin/sh /execargs "-c \"echo $GitVersion_FullSemVer > /github/workspace/version.txt\""
-    - name: Create Release
-      uses: actions/create-release@v1
-      with:
-          tag_name: $(cat ${{env.working-directory}}/version.txt)
+    #- uses: actions/checkout@v1
+  #- name: Create Release
+   #   uses: actions/create-release@v1
+    #  with:
+     #     tag_name: $(cat ${{env.working-directory}}/version.txt)
     - name: Build
       working-directory: ${{env.working-directory}} 
       run: dotnet build --configuration Release --no-restore
