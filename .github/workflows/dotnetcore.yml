@@ -19,10 +19,15 @@ jobs:
         dotnet-version: 3.1.101
     - name: Install dependencies
       run: dotnet restore AzFuncNotifySlack/AzureSlackFunction.csproj   
-    - name: Get Git Version
-      uses: docker://gittools/gitversion:5.0.2-beta1-27-linux-centos-7-netcoreapp2.2
+    - name: GitVersion
+      id: gitversion
+      uses: nmcc/actions/gitversion@v1
       with:
-        args: /github/workspace /nofetch /exec /bin/sh /execargs "-c \"echo $GitVersion_FullSemVer > /github/workspace/version.txt\""
+        path-to-gitversion: packages/GitVersion.CommandLine/tools/GitVersion.exe
+    - name: Create Release
+      uses: actions/create-release@v1
+      with:
+          tag_name: ${{ steps.gitversion.outputs.SemVer }}
     - name: Build
       run: dotnet build AzFuncNotifySlack/AzureSlackFunction.csproj --configuration Release --no-restore
     #- name: Create the package
@@ -40,12 +45,12 @@ jobs:
         --outFolder /home/runner/work/AzFuncNotifySlack
         --basePath /home/runner/work/AzFuncNotifySlack/AzureSlackFunction
         --id AwsSamLambda
-        --version $(cat /home/runner/work/AzFuncNotifySlack/AzureSlackFunction/version.txt)
+        --version ${{ steps.gitversion.outputs.SemVer }}
         --format zip
     - name: Push to Octopus
       run: >-
         /opt/octo/Octo push
         --server ${{ secrets.OCTOADMINSAMPLE_URL }}
         --apiKey ${{ secrets.OCTOADMINSAMPLE_APIKEY }}
-        --package /home/runner/work/AzFuncNotifySlack/AzureSlackFunction.$(cat /home/runner/work/AzFuncNotifySlack/AzureSlackFunction/version.txt).zip
+        --package /home/runner/work/AzFuncNotifySlack/AzureSlackFunction.${{ steps.gitversion.outputs.SemVer }}.zip
         --overwrite-mode IgnoreIfExists
