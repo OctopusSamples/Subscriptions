@@ -42,7 +42,7 @@ jobs:
     - name: Pack Application
       working-directory: ${{env.working-directory}} 
       run: >-
-        /opt/octo/Octo pack .
+        /opt/octo/octo pack .
         --outFolder /home/runner/work/AzFuncNotifySlack
         --basePath /home/runner/work/AzFuncNotifySlack/AzureSlackFunction
         --id AwsSamLambda
