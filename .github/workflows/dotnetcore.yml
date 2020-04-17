@@ -21,7 +21,9 @@ jobs:
         dotnet-version: 3.1.101
     - name: Install dependencies
       working-directory: ${{env.working-directory}} 
-      run: dotnet restore 
+      run: |
+        ls
+        dotnet restore 
     - uses: actions/checkout@v1
     - name: Get Git Version
       uses: docker://gittools/gitversion:5.0.2-beta1-27-linux-centos-7-netcoreapp2.2
